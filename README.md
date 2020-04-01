@@ -293,10 +293,6 @@ I had inuqired about this on the rOpenSci slack and got this discussion:
 Zhian Kamvar Today at 14:25
 Does anyone have a good resource for outlining how far down the rabbit hole what different variants of docker exist (not things like rocker or binder, but rather things like docker, docker-compose, docker stack, docker swarm)?
 
-
-
-
-
 Bryce Mecum  38 minutes ago
 Are you just curious what's out there? How do you mean "how far down the rabbit hole"?
 
