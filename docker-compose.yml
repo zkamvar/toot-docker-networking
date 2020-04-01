@@ -1,0 +1,47 @@
+version: "3"
+
+networks:
+  alpine-net:
+    driver: bridge
+  lapine-net:
+    driver: bridge
+
+services:
+  alpine1:
+    container_name: alpine1
+    image: alpine
+    command: ["ash"]
+    tty: true
+    stdin_open: true
+    ports:
+      - "22:22"
+    networks:
+      - alpine-net
+
+  alpine2:
+    container_name: alpine2
+    image: alpine
+    command: ["ash"]
+    tty: true
+    stdin_open: true
+    networks:
+      - alpine-net
+
+  alpine3:
+    container_name: alpine3
+    image: alpine
+    command: ["ash"]
+    tty: true
+    stdin_open: true
+    networks:
+      - lapine-net
+
+  alpine4:
+    container_name: alpine4
+    image: alpine
+    command: ["ash"]
+    tty: true
+    stdin_open: true
+    networks:
+      - alpine-net
+      - lapine-net

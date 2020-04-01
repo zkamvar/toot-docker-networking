@@ -268,6 +268,12 @@ finds nothing to make, so it's impossible to talk to it through the jekyll
 container or another layer. I know there's a way to get containers running and
 for them to stay afloat, but I don't know what it is yet :/
 
+I've attempted to recreate the configuration above in compose by using named
+networks in the docker-compose.yml file, but I'm at a loss. I AM able to get
+the containers to recognise each other's IP addresses via ping, but I cannot
+ssh into any of them, no matter how much I mess with the ports. I believe there
+is something fundamental about networking that I do not yet understand and it's
+quite frustrating. 
 
 
 
