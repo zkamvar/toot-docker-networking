@@ -275,5 +275,77 @@ ssh into any of them, no matter how much I mess with the ports. I believe there
 is something fundamental about networking that I do not yet understand and it's
 quite frustrating. 
 
+Whenever I am at a loss for solutions, I tend to turn to people who might have
+figured this out. In my case, I generally turn to Rich FitzJohn. I know that
+he has used docker compose A LOT in his work, so I thought I might take a peek
+at one of the projects he's worked on to see how well I can understand it. First
+stop was the {twinkle} architecture:
+
+<https://github.com/mrc-ide/twinkle/blob/master/builder/twinkle/inst/docker-compose.yml.in>
+
+Unfortunately, it is *complex* and at the moment, I am not at liberty to
+understand it. That being said, it seems that the thing runs an apache server,
+which probably allows the different components to talk to each other.
+
+I had inuqired about this on the rOpenSci slack and got this discussion:
+
+
+Zhian Kamvar Today at 14:25
+Does anyone have a good resource for outlining how far down the rabbit hole what different variants of docker exist (not things like rocker or binder, but rather things like docker, docker-compose, docker stack, docker swarm)?
+
+
+
+
+
+Bryce Mecum  38 minutes ago
+Are you just curious what's out there? How do you mean "how far down the rabbit hole"?
+
+Noam Ross  31 minutes ago
+What you describe are different parts of the core docker stack (vertical view).  For the increasingly diverse horizontal view of different programs, but only for the building component, there's this: https://events19.linuxfoundation.org/wp-content/uploads/2017/11/Comparing-Next-Generation-Container-Image-Building-Tools-OSS-Akihiro-Suda.pdf
+:+1:
+1
+
+
+Zhian Kamvar  23 minutes ago
+My motivation is that I want to try abstracting technical details for Carpentries' lesson maintainers (e.g. Jekyll installation, Python/R/language version or package issues) so that they can focus on writing markdown for their lessons: https://github.com/zkamvar/toot-docker-compose#motivation I thought docker-compose might be a good way to make specifying requirements a bit more flexible than attempting to hand-configure dockerfiles for each lesson.
+
+zkamvar/toot-docker-compose
+Notes for myself going through the docker-compose tutorial
+Language
+Python
+Last updated
+5 days ago
+<https://github.com/zkamvar/toot-docker-compose|zkamvar/toot-docker-compose>zkamvar/toot-docker-compose | Mar 26th | Added by GitHub
+
+Zhian Kamvar  18 minutes ago
+I may be going in the absolute wrong direction with this, but I figured if I could reduce the requirements to build one of these (GNU Make, Git, Python 3.4+, Jekyll) to one thing someone has to install, then it's a step forward.
+
+Noam Ross  12 minutes ago
+If they can install docker desktop, which shouldn't be harder than installing all those things, then yes, you can minimize the details they have to run with a docker-compose run carpentry-lesson build, but it's only slightly simpler than docker run -v $(pwd):/lesson carpentries/lesson-builder, which needs only docker, not compose.
+
+Bryce Mecum  11 minutes ago
+(typed this before @noamross’s above) I don't have a good resource to link off-hand but Compose is often the right-sized thing for turning complicated install instructions into 1. Install Docker and Compose 2. docker-compose up. Compose is just a wrapper around docker run.
+
+Noam Ross  9 minutes ago
+Compose shines for (1) saving a bunch of run command line flags in a file, and (2) a multi-container service on a single machine.  You could take advantage of it for (1), but it's a small difference and in either case the bigger effort is just having a carpentries/lesson-builder container on Docker Hub.
+
+Bryce Mecum  8 minutes ago
+Yeah. And getting that configured just right could be hard. For example, if I already have git installed and customized, does the container use my existing config and what happens if the git versions are different and their configs are incompatible? (edited) 
+
+Noam Ross  7 minutes ago
+Bryce, why are you giving me the finger? :slightly_smiling_face:
+
+Bryce Mecum  6 minutes ago
+Oh goodness gracious I did not mean to pick that one!
+
+Bryce Mecum  6 minutes ago
+sorry @noamross!
+
+Zhian Kamvar  6 minutes ago
+:rolling_on_the_floor_laughing:
+
+Zhian Kamvar  1 minute ago
+Thank you both! I've been trying to think about the best way to build this to be as flexible to new requirements without creating a huge docker image, but I guess it's not that different than having people pull separate images for each resource. 
+
 
 
