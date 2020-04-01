@@ -253,3 +253,21 @@ echo "COMPOSE_PROJECT_NAME > carpentries_builder" > .env
 To be honest, the rest of the tutorial is not really informative... I think I
 need to figure out how to do IP tunneling to work this out :/
 
+Wait a tick... there's more space dust on this cover. I don't think I have to do
+that whole `.env` file BS for this. There is apparently a `networks` key for the
+docker-compose yaml. 
+
+Update... there are different versions of the docker machine and the 
+docker-compose yaml and it's super confusing. 
+
+### Difficulties in crosstalk
+
+I'm at this part where I know I need to get the containers to talk to one
+another, but I'm stuck because the r-installation container quits as soon as it
+finds nothing to make, so it's impossible to talk to it through the jekyll
+container or another layer. I know there's a way to get containers running and
+for them to stay afloat, but I don't know what it is yet :/
+
+
+
+
