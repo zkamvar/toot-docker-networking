@@ -17,6 +17,17 @@ not give me the answers that I so desire. Join me, won't you?
 
 The toot is from <https://docs.docker.com/network/network-tutorial-standalone/>
 
+## Takeaway
+
+At this moment, networking between containers is not a feasible solution and
+neither is docker-compose. Rich FitzJohn has brought up the fact that it is 
+extremely difficult to do testing with a docker-compose setup. My idea now is
+just to start with the rocker verse container and build jekyll on top of that.
+Will it make the container bulky? Yes, but it will get away from the weird
+permissions issuse that the jekyll docker maintainer loves to impose on the
+image. 
+
+
 # My Notes
 
 What I do know so far is that the default network for the docker containers is known as the bridge network. 
@@ -260,7 +271,7 @@ docker-compose yaml.
 Update... there are different versions of the docker machine and the 
 docker-compose yaml and it's super confusing. 
 
-### Difficulties in crosstalk
+# Difficulties
 
 I'm at this part where I know I need to get the containers to talk to one
 another, but I'm stuck because the r-installation container quits as soon as it
@@ -287,8 +298,22 @@ Unfortunately, it is *complex* and at the moment, I am not at liberty to
 understand it. That being said, it seems that the thing runs an apache server,
 which probably allows the different components to talk to each other.
 
-I had inuqired about this on the rOpenSci slack and got this discussion:
 
+## rOpenSci discussion
+
+I had inuqired about this on the rOpenSci slack and got this discussion. When I
+inquired, I figured that docker-compose was indeed the right tool for the job,
+but it seems that docker-compose is simply one out of many solutions to a 
+multi-container solution. It has (reportedly) fragmented the docker community 
+as different solutions exist (e.g. amazon container services, K8S), and it seems
+to be a weird cluster. To put more of a fine point on this, it seems that it is
+not currently possible to combine two images in a single dockerfile. 
+
+For what it's worth, I was able to find this resource pointing out that there is
+also docker swarm as a different approach from docker-compose: 
+<https://vsupalov.com/difference-docker-compose-and-docker-stack/>
+
+Below is the conversation that took place on 2020-04-01 14:25 PST
 
 Zhian Kamvar Today at 14:25
 Does anyone have a good resource for outlining how far down the rabbit hole what different variants of docker exist (not things like rocker or binder, but rather things like docker, docker-compose, docker stack, docker swarm)?
@@ -343,5 +368,40 @@ Zhian Kamvar  6 minutes ago
 Zhian Kamvar  1 minute ago
 Thank you both! I've been trying to think about the best way to build this to be as flexible to new requirements without creating a huge docker image, but I guess it's not that different than having people pull separate images for each resource. 
 
+< one day later >
+
+Rich FitzJohn  4 days ago
+FWIW we are in the process of walking away from compose because it left us in a situation where we could not easily test things and have started orchestrating things with (primarily) the Python docker package directly
+
+Zhian Kamvar  4 days ago
+We may cast off compose, but at least we may keep our composure
+:slightly_smiling_face:
+1
 
 
+Noam Ross  4 days ago
+Compose is also where the Docker ecosystem fragments. Various cloud services or frameworks (amazon container service, Kubernetes), each have a slightly different variant of multi-container config approaches, usually tacking on scaling stuff.
+:crying_blood:
+1
+
+
+Bryce Mecum  4 days ago
+@richfitz I'd be curious to hear/read more on that orchestration work.
+
+Rich FitzJohn  10 hours ago
+I need to write a blog post about that (and so many other things tbh) but the short version was that it became untestable. We wanted to be able to bring our system up in testing, staging and production environments with different configuration settings (e.g., different SSL certificates, defaults, etc) and to support this the compose file ended up with so much environment variable substitution that we had to wrap that in a python deployment script. The othe contributing factor was how difficult it is to cope with tight coupling (component A needs to be fully online before B can start, etc) which is part of the distributed monolith anti-pattern, but we have our reasons why we like that pattern :slightly_smiling_face:
+
+Bryce Mecum  6 hours ago
+fair enough! I can't imagine running a true-blood production service with compose. And that's reasonable considering compose has been deprecated for, what, 5+ years? /me goes and checks
+
+Bryce Mecum  6 hours ago
+Sounds like you've wandered into an Ansible, Terraform type situation.
+
+Rich FitzJohn  6 hours ago
+yeah we wondered about that, but we're running on-prem, and the declarative model does not really match how we're thinking about things. Also we did not see an obvious way of testing those ansible deploys!
+
+Bryce Mecum  6 hours ago
+I sure haven't tested deploys. That's pretty hardcore
+
+Rich FitzJohn  5 hours ago
+for groups of 3-5 containers of largely custom code (rather than off the shelf databases etc) we've found it necessary for a last stage of integration testing
